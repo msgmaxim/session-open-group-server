@@ -570,6 +570,8 @@ module.exports = (app, prefix) => {
 
     } catch (e) {
 
+      console.error(`Error processing onion request: `, e);
+
       const code = 400;
 
       const adnResObj = {

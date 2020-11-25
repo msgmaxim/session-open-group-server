@@ -2,6 +2,7 @@ const overlay = require('../../lib.overlay');
 const http = require('http');
 const pathUtil = require('path');
 const fs = require('fs');
+const fsAsync = fs.promises;
 const express = require('express');
 const lokinet = require('loki-launcher/lokinet');
 const configUtil = require('../../server/lib/lib.config.js')
@@ -87,11 +88,12 @@ module.exports = (app, prefix) => {
   /// this server is used as a submodule)
   /// ************************************************
 
-  app.use(prefix + '/loki/v1/f/:file', function(req, res) {
+  app.use(prefix + '/loki/v1/f/:file', async function(req, res) {
+
     const safePath = req.params.file.replace(/[\.\/]/g, '');
 
     try {
-      const buf = fs.readFileSync('files/' + safePath);
+      const buf = await fsAsync.readFile('files/' + safePath);
 
       /// NOTE: attachments in private conversations are saved under
       /// `/root/nodepomf/files/` (not in `files/` relative to current dir)
